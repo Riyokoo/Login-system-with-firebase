@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image } from 'react-native';
 import ImagePicker from 'react-native-image-picker'
 
 import * as firebase from "firebase";
@@ -13,7 +13,7 @@ export default class RegisterScreen extends React.Component{
         name:"",
         email: "",
         password: "",
-        errorMessage: null
+        errorMessage: "",
     };
     
 
@@ -26,57 +26,93 @@ export default class RegisterScreen extends React.Component{
                     displayName: this.state.name
                 });
             })
-            .catch(error => this.setState({ errorMessage: error.message }));
+            .catch(error => {
+
+                if (this.state.name === "") {
+                    this.setState({errorMessage:"Numele trebuie completat"})
+                }
+
+                else if (this.state.email === "") {
+                    this.setState({errorMessage:"Adresa de mail trebuie completata"})
+                }
+
+                else if (error.code === 'auth/invalid-email') {
+                    this.setState({ errorMessage: "Adresa de email nu e valida" })
+                }
+
+                else if (this.state.password === "") {
+                    this.setState({errorMessage:"Parola trebuie completata"})
+                }
+
+                
+
+                else if (error.code === "auth/weak-password") {
+                    this.setState({errorMessage: "Parola trebuie sa contina 6 caractere"})
+                }
+
+                else if (error.code === "auth/email-already-in-use") {
+                    this.setState({errorMessage:"Acest email este deja folosit"})
+                }
+                
+            } );
     };
+
+    //this.setState({ errorMessage: error.message })
 
     render() {
         return (
             <View style={styles.container}>
-                <Image source = {require('..//../Login/Logo.png')}></Image>
-                <Text style={styles.greeting}>{`Hello! \n Sign Up to get started.`}</Text>
+                
+                <View style = {styles.center_things}>
+                    <Image style ={styles.Logo}  source = {require("../Logo.png")}></Image>
+                </View>
+
+                <Text style={styles.greeting}>{`Welcome to MedHelp! `}</Text>
                 
                 <View style = {styles.errorMessage}>
-                    {this.state.errorMessage && <Text style = {styles.error}>{this.state.errorMessage}</Text>}
+                   <Text style = {styles.error}>{this.state.errorMessage}</Text>
                 </View>
 
-                <View style={styles.form}>
+               
+                    <View style={styles.form}>
                 
-                    <View>
-                        <Text style={styles.inputTitle}>Full Name</Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            onChangeText={name => this.setState({ name })}
-                            value = {this.state.name}
-                        ></TextInput>
+                        <View>
+                            <Text style={styles.inputTitle}>Full Name</Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                onChangeText={name => this.setState({ name })}
+                                value = {this.state.name}
+                            ></TextInput>
+                        </View>
                     </View>
-                </View>
 
-                <View style={styles.form}>
-                    <View>
-                        <Text style={styles.inputTitle}>Email Address</Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            onChangeText={email => this.setState({ email })}
-                            value = {this.state.email}
-                        ></TextInput>
+                    <View style={styles.form}>
+                        <View>
+                            <Text style={styles.inputTitle}>Email Address</Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                onChangeText={email => this.setState({ email })}
+                                value = {this.state.email}
+                            ></TextInput>
+                        </View>
+                        
                     </View>
-                    
-                </View>
 
-                 <View style = {styles.form}>
-                    <View>
-                        <Text style={styles.inputTitle}>Password</Text>
-                        <TextInput
-                            style={styles.input}
-                            secureTextEntry
-                            autoCapitalize="none"
-                            onChangeText={password => this.setState({ password })}
-                            value = {this.state.password}
-                        ></TextInput>
+                    <View style = {styles.form}>
+                        <View>
+                            <Text style={styles.inputTitle}>Password</Text>
+                            <TextInput
+                                style={styles.input}
+                                secureTextEntry
+                                autoCapitalize="none"
+                                onChangeText={password => this.setState({ password })}
+                                value = {this.state.password}
+                            ></TextInput>
+                        </View>
                     </View>
-                </View>
+                
 
                 <TouchableOpacity style = {styles.button} onPress = {this.handleSignUp}>
                     <Text style = {{color:"#FFF", fontWeight:"500"}} >Sign up</Text>
@@ -84,7 +120,7 @@ export default class RegisterScreen extends React.Component{
 
                 <TouchableOpacity style = {{alignSelf:'center', marginTop:32}} onPress = {() => this.props.navigation.navigate("Login")}>
                     <Text style = {{color: "#414959", fontSize:13}}>
-                         New to MedHelp ? <Text style = {{fontWeight:"500", color:"#E9446A" }}>Login</Text>
+                         Ai deja un cont ? <Text style = {{fontWeight:"500", color:"#E9446A" }}>Intra aici !</Text>
                     </Text>
                 </TouchableOpacity>
 
@@ -99,18 +135,23 @@ const styles = StyleSheet.create({
         flex: 1,
         
     },
+    center_things: {
+        alignItems: "center",
+        justifyContent:"center",
+    },
     greeting: {
-        marginTop: 32,
+        marginTop: 10,
         fontSize: 18,
         fontWeight: "400",
-        textAlign:"center"
+        textAlign: "center",
+        marginBottom:10,
     },
     errorMessage: {
-        marginTop:30,
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: 25,
-        marginRight:25,
+        marginBottom:10,
+        
+    
         
     },
     error: {
@@ -128,6 +169,13 @@ const styles = StyleSheet.create({
         color: "grey",
         fontSize: 12,
         textTransform:"uppercase"
+    },
+    Logo: {
+        width: 70,
+        height: 70,
+        borderRadius: 10,
+        marginTop:20,
+        
     },
     input: {
         borderBottomColor: "grey",

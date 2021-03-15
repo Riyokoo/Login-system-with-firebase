@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet,TextInput, TouchableOpacity  } from 'react-native';
+import { View, Text, StyleSheet,TextInput, TouchableOpacity, Image  } from 'react-native';
 
 import * as firebase from "firebase";
 
@@ -9,8 +9,8 @@ import * as firebase from "firebase";
 export default class LoginScreen extends React.Component{
 
     state = {
-        email: "andrei@admin.com",
-        password: "awda",
+        email: "",
+        password: "",
         errorMessage: null
     };
     
@@ -21,16 +21,35 @@ export default class LoginScreen extends React.Component{
         firebase
             .auth()
             .signInWithEmailAndPassword(email , password)
-            .catch(error => this.setState({ errorMessage: error.message }))
+            .catch(error => {
+
+                if (this.state.email === "") {
+                    this.setState({errorMessage:"Adresa de mail trebuie completata !"})
+                }
+
+                else if (this.state.password === "") {
+                    this.setState({errorMessage:"Parola trebuie completata"})
+                }
+
+                else if (error.code === "auth/user-not-found") {
+                    this.setState({errorMessage:"Acest cont nu exista !"})
+                }
+
+                
+            })
     };
 
     render() {
         return (
             <View style = {styles.container}>
-                <Text style={styles.greeting}>{`Hello again. \n Welcome back.`}</Text>
+                <Text style={styles.greeting}>{`Bine ai venit ! \n MedHelp `}</Text>
                 
                 <View style = {styles.errorMessage}>
                     {this.state.errorMessage && <Text style = {styles.error}>{this.state.errorMessage}</Text>}
+                </View>
+
+                <View style = {styles.center_things}>
+                    <Image style ={styles.Logo}  source = {require("../Logo.png")}></Image>
                 </View>
 
                 <View style = {styles.form}>
@@ -59,12 +78,12 @@ export default class LoginScreen extends React.Component{
                 </View>
 
                 <TouchableOpacity style = {styles.button} onPress = {this.handleLogin}>
-                    <Text style = {{color:"#FFF", fontWeight:"500"}} >Sign in</Text>
+                    <Text style = {{color:"#FFF", fontWeight:"500"}} >Login</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style = {{alignSelf:'center', marginTop:32}} onPress = {() => this.props.navigation.navigate("Register")}>
                     <Text style = {{color: "#414959", fontSize:13}}>
-                         New to MedHelp ? <Text style = {{fontWeight:"500", color:"#E9446A" }}>Sign Up </Text>
+                         Nu ai cont ? <Text style = {{fontWeight:"500", color:"#E9446A" }}>Fa-ti unul aici! </Text>
                     </Text>
                 </TouchableOpacity>
 
@@ -85,6 +104,10 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         textAlign:"center"
     },
+    center_things: {
+        alignItems: "center",
+        justifyContent:"center",
+    },
     errorMessage: {
         marginTop:30,
         alignItems: "center",
@@ -103,6 +126,13 @@ const styles = StyleSheet.create({
     form: {
         marginBottom: 48,
         marginHorizontal: 30,
+    },
+    Logo: {
+        width: 70,
+        height: 70,
+        borderRadius: 10,
+        marginTop:20,
+        
     },
     inputTitle: {
         color: "grey",
