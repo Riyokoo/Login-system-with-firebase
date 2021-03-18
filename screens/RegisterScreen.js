@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image } from 'react-native';
-import ImagePicker from 'react-native-image-picker'
 
 import * as firebase from "firebase";
 
@@ -64,10 +63,10 @@ export default class RegisterScreen extends React.Component{
             <View style={styles.container}>
                 
                 <View style = {styles.center_things}>
-                    <Image style ={styles.Logo}  source = {require("../Logo.png")}></Image>
+                    <Image style ={styles.Logo}  source = {require("../MedLife.png")}></Image>
                 </View>
 
-                <Text style={styles.greeting}>{`Welcome to MedHelp! `}</Text>
+                <Text style={styles.greeting}>{`Bine ai venit la MedHelp! `}</Text>
                 
                 <View style = {styles.errorMessage}>
                    <Text style = {styles.error}>{this.state.errorMessage}</Text>
@@ -120,7 +119,7 @@ export default class RegisterScreen extends React.Component{
 
                 <TouchableOpacity style = {{alignSelf:'center', marginTop:32}} onPress = {() => this.props.navigation.navigate("Login")}>
                     <Text style = {{color: "#414959", fontSize:13}}>
-                         Ai deja un cont ? <Text style = {{fontWeight:"500", color:"#E9446A" }}>Intra aici !</Text>
+                         Ai deja un cont ? <Text style = {{fontWeight:"500", color:"#12B0C4" }}>Intra aici !</Text>
                     </Text>
                 </TouchableOpacity>
 
@@ -187,7 +186,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginHorizontal: 30,
-        backgroundColor: "#E9446A",
+        backgroundColor: "#12B0C4",
         borderRadius: 4,
         height: 52,
         justifyContent: 'center',

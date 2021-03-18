@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet,TextInput, TouchableOpacity, Image  } from 'react-native';
-
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Linking } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'
 import * as firebase from "firebase";
 
 
@@ -27,10 +27,14 @@ export default class LoginScreen extends React.Component{
                     this.setState({errorMessage:"Adresa de mail trebuie completata !"})
                 }
 
-                else if (this.state.password === "") {
-                    this.setState({errorMessage:"Parola trebuie completata"})
+                else if (error.code === 'auth/invalid-email') {
+                    this.setState({errorMessage:"Adresa de email nu este valida !"})
                 }
 
+                else if (this.state.password === "") {
+                    this.setState({errorMessage:"Parola trebuie completata !"})
+                }
+                    
                 else if (error.code === "auth/user-not-found") {
                     this.setState({errorMessage:"Acest cont nu exista !"})
                 }
@@ -49,7 +53,7 @@ export default class LoginScreen extends React.Component{
                 </View>
 
                 <View style = {styles.center_things}>
-                    <Image style ={styles.Logo}  source = {require("../Logo.png")}></Image>
+                    <Image style ={styles.Logo}  source = {require("../MedLife.png")}></Image>
                 </View>
 
                 <View style = {styles.form}>
@@ -78,14 +82,22 @@ export default class LoginScreen extends React.Component{
                 </View>
 
                 <TouchableOpacity style = {styles.button} onPress = {this.handleLogin}>
-                    <Text style = {{color:"#FFF", fontWeight:"500"}} >Login</Text>
+                    <Text style = {{color:"", fontWeight:"500"}} >Login</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style = {{alignSelf:'center', marginTop:32}} onPress = {() => this.props.navigation.navigate("Register")}>
                     <Text style = {{color: "#414959", fontSize:13}}>
-                         Nu ai cont ? <Text style = {{fontWeight:"500", color:"#E9446A" }}>Fa-ti unul aici! </Text>
+                         Nu ai cont ? <Text style = {{fontWeight:"500", color:"#12B0C4" }}>Fa-ti unul aici! </Text>
                     </Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity style = {styles.phoneCall}>
+                    <Text>
+                        {`Ai nevoie de ajutor ?\n`}<FontAwesome name="phone" size={24} color="black" /><Text style = {styles.phoneText} onPress={() => { Linking.openURL('tel:0754364913'); }}>: 0754364913</Text>
+                    </Text>             
+                </TouchableOpacity>
+
+                
 
             </View>
             
@@ -131,7 +143,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 10,
-        marginTop:20,
+        marginTop:1,
         
     },
     inputTitle: {
@@ -139,6 +151,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textTransform:"uppercase"
     },
+    phoneCall: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop:40,
+    },
+
     input: {
         borderBottomColor: "grey",
         borderBottomWidth: StyleSheet.hairlineWidth,
@@ -147,9 +165,12 @@ const styles = StyleSheet.create({
         color: "black",
         
     },
+    phoneText: {
+        color:"#0000FF",
+    },
     button: {
         marginHorizontal: 30,
-        backgroundColor: "#E9446A",
+        backgroundColor: "#12B0C4",
         borderRadius: 4,
         height: 52,
         justifyContent: 'center',

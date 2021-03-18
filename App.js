@@ -4,8 +4,14 @@ import HomeScreen from './screens/HomeScreen'
 import RegisterScreen from './screens/RegisterScreen'
 import LoadingScreen from './screens/LoadingScreen'
 import LoginScreen from './screens/LoginScreen'
-
 import * as firebase from 'firebase'
+
+import { createDrawerNavigator} from 'react-navigation-drawer'
+import { Dimensions } from 'react-native'
+import { Feather } from '@expo/vector-icons';
+
+
+
 
 var firebaseConfig = {
     apiKey: "AIzaSyBEeiYQmTTWeC1uZSncYnK2cDYWXn4ii50",
@@ -39,7 +45,8 @@ export default createAppContainer(
     {
       Loading: LoadingScreen,
       App: AppStack,
-      Auth:AuthStack,
+      Auth: AuthStack,
+      
     },
     {
       initialRouteName:"Loading"
